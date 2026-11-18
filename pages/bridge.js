@@ -1,11 +1,12 @@
 // 웹 데모(GitHub Pages)에서 서버 대신 답해요. 화면 코드(app.js)는 센터 PC 버전과 똑같이 써요.
 (function () {
   const PREVIEW_Q = "제주 전체에서 밤길 공백이 큰 정류장 10곳 알려줘";
-  const worker = new Worker("pages/worker.js");
+  const ver = ((document.currentScript && document.currentScript.src) || "").split("?")[1] || "";
+  const worker = new Worker("pages/worker.js" + (ver ? "?" + ver : ""));
   let events = [], busy = false, ready = false, failed = "", nid = 0;
   const uploads = [], waiting = {};
-  const manifestP = fetch("manifest.json").then((r) => r.json());
-  const previewP = fetch("preview.json").then((r) => r.json()).catch(() => null);
+  const manifestP = fetch("manifest.json", { cache: "no-cache" }).then((r) => r.json());
+  const previewP = fetch("preview.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => null);
 
   worker.onmessage = (m) => {
     const d = m.data;
