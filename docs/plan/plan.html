@@ -104,7 +104,7 @@
         제주데이터허브 정류소별 이용자 API·시간대별 승차·CCTV, 공공데이터포털 CCTV·안전비상벨·학교·버스정류소, NASA 위성 밤 불빛</td></tr>
       <tr><th>사용 모델</th><td>Claude (<code>claude-opus-5-5</code>) 도구 호출 Agent + API 없이도 끝까지 동작하는 규칙 모드</td></tr>
       <tr><th>실행 환경</th><td>센터 PC(Windows 11)에서 로컬 서버 + 브라우저. Python 표준 라이브러리 기반, 추가 패키지 1개</td></tr>
-      <tr><th>참가</th><td>개인 참가</td></tr>
+      <tr><th>웹 데모·코드</th><td>hosting1108.github.io/night-gap-agent · github.com/HOSTing1108/night-gap-agent</td></tr>
     </table>
     <p class="footer-note">숫자는 2026년 11월 기준 공개 자료로 실제 계산한 값이에요. 센터 3-04를 연결하면 같은 화면에서 밤 하차·막차 공백까지 계산해요. 이 결과는 <b>위험 지도가 아니라 먼저 보강할 곳을 알려주는 시설 공백 지도</b>예요.</p>
   </div>
@@ -296,7 +296,7 @@
       <h3 style="margin-top:0">예산 1억원 Agent 추천안</h3>
       <table>
         <tr><th>항목</th><th class="num">값</th></tr>
-        <tr><td>손보는 정류장</td><td class="num">45곳 (방향만 돌리는 곳 19곳)</td></tr>
+        <tr><td>손보는 정류장</td><td class="num">46곳 (방향만 돌리는 곳 19곳)</td></tr>
         <tr><td>새로 CCTV가 닿는 사람 (하루)</td><td class="num">12,689명</td></tr>
         <tr><td>가까이에 비상벨이 생기는 사람 (하루)</td><td class="num">27,442명</td></tr>
         <tr><td>이용 많은 곳부터 새로 달 때보다</td><td class="num"><b>+45%</b></td></tr>
@@ -538,6 +538,7 @@
     <tr><td>Anthropic Claude API</td><td><code>https://api.anthropic.com</code></td><td>규칙 모드로 자동 전환, 모든 기능 동작</td></tr>
     <tr><td>제주데이터허브 API (자료 수집 때만)</td><td><code>https://open.jejudatahub.net</code></td><td>받아 둔 CSV로 동작. 센터에서는 3-04를 쓰므로 필요 없음</td></tr>
     <tr><td>지도 서비스</td><td>사용하지 않음 (좌표로 직접 그림, 위성 영상은 파일로 포함)</td><td>—</td></tr>
+    <tr><td>웹 데모 (선택)</td><td>GitHub Pages + Pyodide(<code>cdn.jsdelivr.net</code>)로 같은 Agent 코드를 브라우저에서 실행</td><td>센터 PC 실행에는 필요 없음</td></tr>
   </table>
   <h3>센터 탑재 절차</h3>
   <table>

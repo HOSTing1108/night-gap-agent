@@ -17,13 +17,13 @@
 |---|---|---|---|---|---|
 | CCTV 정보 | 공공데이터포털 전국CCTV표준데이터 (data.go.kr/data/15013094) | 2025-05-12, 2025-11-05 | 1,043곳 (카메라 5,324대) | WGS84 | `data/public/cctv_jeju.csv` |
 | CCTV 정보 | 제주데이터허브 (jejudatahub.net/data/view/data/846) | 2022-12-15, 2023-04-11, 2024-07-29 | 479행 (카메라 1,916대) | WGS84 | `data/public/cctv_jejudatahub.csv` |
-| 일일 정류소별 버스 이용자 정보 | 제주데이터허브 API (jejudatahub.net/data/view/data/613), 제공처 제주빅데이터센터 | 2025-10-14부터 (수집 중) | 하루 약 6,300행, 정류장 약 2,800곳 | 없음 (정류장 이름으로 연결) | `data/input/hub_stop_daily_usage.csv` (`tools/fetch_hub_usage.py`로 생성) |
+| 일일 정류소별 버스 이용자 정보 | 제주데이터허브 API (jejudatahub.net/data/view/data/613), 제공처 제주빅데이터센터 | 2025-09-24 ~ 2025-10-25 중 25일 (추석 연휴 10/3~10/9 제외) | 정류장 3,646곳 | 없음 (정류장 이름으로 연결) | `data/input/hub_stop_daily_usage.csv` (`tools/fetch_hub_usage.py`로 생성) |
 | 버스 정류소 현황 | 공공데이터포털 제주특별자치도_버스정류소현황 (data.go.kr/data/15010850) | 2022-11-01 | 4,080행 (1행 좌표 오류 제외) | WGS84 | `data/public/bus_stops_jeju_20221101.csv` |
 | 일별 시간대별 버스 승차 인원 | 제주데이터허브 (jejudatahub.net/data/view/data/512), 제공처 제주빅데이터센터 | 2023-12-25 ~ 2025-10-26 | 37,057행 | 없음 (제주 전체 합계) | `data/public/bus_hourly_boarding_jejudatahub.csv` |
 | 안전비상벨 위치 | 공공데이터포털 전국안전비상벨위치표준데이터 (data.go.kr/data/15028206) | 2025-10-31, 2026-05-22 | 811개 | WGS84 | `data/public/safety_bell_jeju.csv` |
 
-- 이용조건: 공공데이터포털 이용허락범위를 따라요. 출처를 표기해요. (제출 전 각 자료 페이지의 이용허락범위를 다시 확인해요.)
-- 이 두 자료는 원본 그대로 넣었어요. 제주 지역만 내려받은 파일이에요.
+- 이용조건: 공공데이터포털·제주데이터허브 자료는 각 자료의 이용허락범위에 따라 출처를 밝혀 써요.
+- 공공데이터포털 자료는 제주 지역만 내려받은 원본 그대로 넣었어요.
 
 ### 공개 자료 점검 결과 (Agent의 `check_coverage` 출력)
 | 자료 | 점검 결과 | Agent의 대응 |
@@ -130,9 +130,9 @@ CSV 올리기
 ## 5. 외부 서비스, 오픈소스, AI 활용 고지
 | 구분 | 내용 |
 |---|---|
-| 외부 서비스 | Anthropic Claude API (`api.anthropic.com`). 없으면 규칙 모드로 동작해요. |
+| 외부 서비스 | Anthropic Claude API (`api.anthropic.com`). 없으면 규칙 모드로 동작해요. 자료 수집 때만 제주데이터허브 API. 웹 데모는 GitHub Pages(`hosting1108.github.io/night-gap-agent`)에 올렸고, 센터 PC 실행에는 필요 없어요. |
 | 사용 모델 | `claude-opus-5-5` (설정으로 변경 가능) |
-| 오픈소스 | `anthropic` Python SDK (MIT). 그 밖에는 Python 표준 라이브러리만 써요. |
-| 외부 데이터 | 위 2절의 공개 데이터 2종, 밤 불빛 위성 영상 NASA Black Marble 2016 (VIIRS 연간 합성, 약 500m, NASA GIBS 제공, CC0, `app/static/nightlights_jeju_2016.png`), 지도 섬 윤곽선 Natural Earth 1:10m (퍼블릭 도메인, `app/static/jeju_outline.js`) |
+| 오픈소스 | `anthropic` Python SDK (MIT). 그 밖에는 Python 표준 라이브러리만 써요. 웹 데모만 Pyodide(MPL-2.0, `cdn.jsdelivr.net`에서 불러옴)로 같은 파이썬 코드를 브라우저에서 돌려요. |
+| 외부 데이터 | 위 2절의 공개 데이터(정류장, CCTV, 비상벨, 학교, 허브 이용 자료), 밤 불빛 위성 영상 NASA Black Marble 2016 (VIIRS 연간 합성, 약 500m, NASA GIBS 제공, CC0, `app/static/nightlights_jeju_2016.png`), 지도 섬 윤곽선 Natural Earth 1:10m (퍼블릭 도메인, `app/static/jeju_outline.js`) |
 | 개발에 쓴 AI 도구 | Claude Code (코드 작성, 문서 초안, 데이터 점검 보조). 주제 선정, 설계 판단, 결과 검증은 참가자가 했어요. |
 | 가상 데이터 | `data/sample`은 시연용으로 만든 가상 자료예요. 정류장 이름이 모두 "가상"으로 시작해요. `tools/make_synthetic.py`로 다시 만들 수 있어요. |
