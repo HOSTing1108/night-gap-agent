@@ -883,26 +883,42 @@ function NightMap3D(canvas, opts) {
   }
 
   // ---------- picking and input ----------
-  function pick(mx, my) {
+  function pick(mx, my, touch) {
     if (!data) return null;
-    const lm = lmBoxes.find((b) => mx >= b[0] && mx <= b[0] + b[2] && my >= b[1] && my <= b[1] + b[3]);
-    if (lm) return { type: "landmark", m: lm[4], label: lm[4].name + " 가까이 보기", p: [lm[0] + lm[2] / 2, lm[1] + 4] };
     let best = null, bd = 1e9;
     const consider = (p, r, item) => { if (!p) return; const d = Math.hypot(p[0] - mx, p[1] - my); if (d < r && d < bd) { bd = d; best = item; } };
-    for (const c of cards) consider(c._p, 16, { type: "stop", id: c.id, label: `${c.rank}. ${c.name}`, p: c._p });
+    // 순위 핀이 지명 표시보다 먼저예요. 손가락은 더 넓게 잡아요.
+    for (const c of cards) consider(c._p, touch ? 24 : 16, { type: "stop", id: c.id, label: `${c.rank}. ${c.name}`, p: c._p });
     if (best) return best;
+    const lm = lmBoxes.find((b) => mx >= b[0] && mx <= b[0] + b[2] && my >= b[1] && my <= b[1] + b[3]);
+    if (lm) return { type: "landmark", m: lm[4], label: lm[4].name + " 가까이 보기", p: [lm[0] + lm[2] / 2, lm[1] + 4] };
     if (cam.D < 26000) for (const s of data.stops) consider(s._p, 12, { type: "stop", id: s.id, label: s.name, p: s._p });
     if (best) return best;
     if (cam.D >= 9000) for (const z of data.zones) { const p = projLL(z.lat, z.lon, 0); consider(p, Math.max(18, (F * 950) / (p ? p[2] : 1e9)), { type: "zone", key: z.key, label: z.label, p }); }
     return best;
   }
   let drag = null;
+  const touches = new Map();   // 두 손가락으로 벌리고 오므리면 확대·축소해요
+  let pinch = null;
   canvas.addEventListener("pointerdown", (e) => {
-    canvas.setPointerCapture(e.pointerId);
-    drag = { x: e.clientX, y: e.clientY, moved: 0, rotate: e.button === 2 || e.ctrlKey || e.shiftKey };
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) { /* 이미 끝난 터치 */ }
+    touches.set(e.pointerId, [e.clientX, e.clientY]);
+    if (touches.size === 2) {
+      const [p, q] = [...touches.values()];
+      pinch = Math.hypot(p[0] - q[0], p[1] - q[1]); drag = null; return;
+    }
+    drag = { x: e.clientX, y: e.clientY, moved: 0, touch: e.pointerType === "touch", rotate: e.button === 2 || e.ctrlKey || e.shiftKey };
   });
+  const endTouch = (e) => { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; };
+  canvas.addEventListener("pointercancel", (e) => { endTouch(e); drag = null; });
   canvas.addEventListener("pointermove", (e) => {
     const r = canvas.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    if (touches.has(e.pointerId)) touches.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pinch && touches.size === 2) {
+      const [p, q] = [...touches.values()], d = Math.hypot(p[0] - q[0], p[1] - q[1]);
+      if (d > 0) { self.zoom(pinch / d); pinch = d; }
+      return;
+    }
     if (drag) {
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
       drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy);
@@ -921,8 +937,9 @@ function NightMap3D(canvas, opts) {
   });
   canvas.addEventListener("pointerup", (e) => {
     const r = canvas.getBoundingClientRect(), was = drag; drag = null;
-    if (was && was.moved < 6) {
-      const h = pick(e.clientX - r.left, e.clientY - r.top);
+    endTouch(e);
+    if (was && was.moved < (was.touch ? 12 : 6)) {
+      const h = pick(e.clientX - r.left, e.clientY - r.top, was.touch);
       if (h && h.type === "landmark") self.lookAt(h.m.lat, h.m.lon, h.m.kind === "peak" ? 26000 : 7000);
       else if (h && opts.onPick) opts.onPick(h);
     }
