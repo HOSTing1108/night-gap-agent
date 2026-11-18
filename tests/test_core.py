@@ -238,3 +238,10 @@ class FlexibleDataTest(unittest.TestCase):
         ans = [e["text"] for e in s.events if e["type"] == "answer"][-1]
         self.assertIn("CSV 올리기", ans)
         self.assertIsNone(s.report)
+
+    def test_one_added_crime_cctv_does_not_flip_counting(self):
+        pts = [{"lat": 33.5, "lon": 126.5, "city": "제주시", "purpose": "교통단속"} for _ in range(100)]
+        pts.append({"lat": 33.5, "lon": 126.5, "city": "제주시", "purpose": "생활방범"})
+        pts += [{"lat": 33.25, "lon": 126.56, "city": "서귀포시", "purpose": "생활방범"} for _ in range(20)]
+        warn = [w for w in T.check_coverage(pts, "cctv")["warnings"] if w["code"] == "NO_CRIME_CCTV"]
+        self.assertEqual([w["city"] for w in warn], ["제주시"])

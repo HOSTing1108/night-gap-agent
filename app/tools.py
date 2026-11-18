@@ -354,6 +354,26 @@ def hourly_share(path, recent_days=90):
             "late_per_day": next((b["per_day"] for b in bands if b["band"].startswith("22")), None)}
 
 
+_IDX_CACHE = []   # [(points list, filter key, index, nearest cache)] 같은 자료로 기준만 바꿔 다시 계산할 때 재사용해요
+
+
+def _cached_index(points, fkey, filt):
+    for pts, k, idx, near in _IDX_CACHE:
+        if pts is points and k == fkey and idx.n == sum(1 for p in points if filt(p)):
+            return idx, near
+    idx = PointIndex(((p["lat"], p["lon"], p) for p in points if filt(p)))
+    _IDX_CACHE.append((points, fkey, idx, {}))
+    del _IDX_CACHE[:-6]
+    return idx, _IDX_CACHE[-1][3]
+
+
+def _nearest(idx, cache, lat, lon):
+    k = (lat, lon)
+    if k not in cache:
+        cache[k] = idx.nearest(lat, lon)
+    return cache[k]
+
+
 def compute_gaps(stops, demand, cctv=None, bells=None, lights=None, opts=None):
     o = {**DEFAULT_OPTS, **(opts or {})}
     w = {**DEFAULT_OPTS["weights"], **(o.get("weights") or {})}
@@ -363,8 +383,8 @@ def compute_gaps(stops, demand, cctv=None, bells=None, lights=None, opts=None):
             return True
         return any(k in (p["purpose"] or "") for k in o["cctv_purposes"]) or not p["purpose"]
 
-    idx_c = PointIndex(((p["lat"], p["lon"], p) for p in (cctv or []) if keep(p))) if cctv is not None else None
-    idx_b = PointIndex(((p["lat"], p["lon"], p) for p in bells)) if bells is not None else None
+    idx_c, near_c = _cached_index(cctv, ("cctv", tuple(o["cctv_purposes"] or ())), keep) if cctv is not None else (None, None)
+    idx_b, near_b = _cached_index(bells, ("bell",), lambda p: True) if bells is not None else (None, None)
     idx_l = PointIndex(((p["lat"], p["lon"], p) for p in lights), cell_m=100) if lights is not None else None
 
     rows = []
@@ -379,14 +399,14 @@ def compute_gaps(stops, demand, cctv=None, bells=None, lights=None, opts=None):
         if idx_c is not None:
             hits = idx_c.within(s["lat"], s["lon"], o["cctv_radius_m"])
             r["cctv_n"] = len(hits)
-            near = idx_c.nearest(s["lat"], s["lon"])
+            near = _nearest(idx_c, near_c, s["lat"], s["lon"])
             r["cctv_nearest_m"] = round(near[0]) if near else None
             if not hits:
                 r["gaps"].append("eyes")
         if idx_b is not None:
             hits = idx_b.within(s["lat"], s["lon"], o["bell_radius_m"])
             r["bell_n"] = len(hits)
-            near = idx_b.nearest(s["lat"], s["lon"])
+            near = _nearest(idx_b, near_b, s["lat"], s["lon"])
             r["bell_nearest_m"] = round(near[0]) if near else None
             if not hits:
                 r["gaps"].append("bell")
@@ -604,9 +624,11 @@ def check_coverage(points, kind, stops=None):
         cp = Counter(p["city"] for p in points if any(k in (p["purpose"] or "") for k in CRIME_PREVENTION))
         rep["crime_prevention_by_city"] = dict(cp)
         for city in ("제주시", "서귀포시"):
-            if cp.get(city, 0) == 0:
-                rep["warnings"].append({"code": "NO_CRIME_CCTV", "city": city,
-                                        "detail": f"{city} CCTV는 모두 교통용으로 올라와 있어요. 용도와 상관없이 모든 CCTV를 세요."})
+            n_city, n_cp = by_city.get(city, 0), cp.get(city, 0)
+            if n_city and n_cp < max(1, 0.05 * n_city):   # 방범용이 없거나 5%도 안 되면
+                why = "모두 교통용으로 올라와 있어요" if n_cp == 0 else f"{n_city:,}곳 중 방범용이 {n_cp}곳뿐이에요"
+                rep["warnings"].append({"code": "NO_CRIME_CCTV", "city": city, "crime_cctv": n_cp,
+                                        "detail": f"{city} CCTV는 {why}. 용도와 상관없이 모든 CCTV를 세요."})
     if kind == "bell":
         places = Counter(p["purpose"] or "미상" for p in points)
         rep["by_place_type"] = dict(places.most_common(8))

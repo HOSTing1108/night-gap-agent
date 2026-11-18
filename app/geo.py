@@ -51,10 +51,17 @@ class PointIndex:
         """Return [(distance_m, payload)] sorted by distance."""
         ki, kj = self._key(lat, lon)
         span = int(math.ceil(radius_m / (self.cell_lat * 111_320.0))) + 1
+        # 평면 근사로 먼저 거르고(여유 2%), 남은 점만 정확한 거리로 재요. 결과는 같아요.
+        ky, kx = 111_320.0, 111_320.0 * math.cos(math.radians(lat))
+        lim = (radius_m * 1.02) ** 2
         out = []
+        get = self.buckets.get
         for i in range(ki - span, ki + span + 1):
             for j in range(kj - span, kj + span + 1):
-                for plat, plon, payload in self.buckets.get((i, j), ()):
+                for plat, plon, payload in get((i, j), ()):
+                    dy, dx = (plat - lat) * ky, (plon - lon) * kx
+                    if dx * dx + dy * dy > lim:
+                        continue
                     d = haversine(lat, lon, plat, plon)
                     if d <= radius_m:
                         out.append((d, payload))
@@ -62,14 +69,31 @@ class PointIndex:
         return out
 
     def nearest(self, lat, lon, max_m: float = 5000.0):
-        r = 100.0
-        while True:
-            hits = self.within(lat, lon, min(r, max_m))
-            if hits:
-                return hits[0]
-            if r >= max_m:
-                return None
-            r *= 2
+        """가장 가까운 점 (거리, payload). max_m 안에 없으면 None.
+
+        가운데 칸부터 한 겹씩 넓혀 가며 찾고, 남은 칸이 지금까지 찾은 것보다 멀면 멈춰요.
+        """
+        ki, kj = self._key(lat, lon)
+        cell = min(self.cell_lat * 111_320.0, self.cell_lon * 111_320.0 * math.cos(math.radians(lat))) * 0.98
+        max_span = int(math.ceil(max_m / cell)) + 1
+        best, bd = None, float("inf")
+        get = self.buckets.get
+        for s in range(max_span + 1):
+            if best is not None and (s - 1) * cell > bd:
+                break
+            if s == 0:
+                ring = ((ki, kj),)
+            else:
+                ring = [(ki - s, j) for j in range(kj - s, kj + s + 1)] + [(ki + s, j) for j in range(kj - s, kj + s + 1)] \
+                    + [(i, kj - s) for i in range(ki - s + 1, ki + s)] + [(i, kj + s) for i in range(ki - s + 1, ki + s)]
+            for key in ring:
+                for plat, plon, payload in get(key, ()):
+                    d = haversine(lat, lon, plat, plon)
+                    if d < bd:
+                        bd, best = d, payload
+        if best is None or bd > max_m:
+            return None
+        return (bd, best)
 
 
 # --------------------------------------------------------------------------

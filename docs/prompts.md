@@ -19,7 +19,7 @@ CCTV, 안전비상벨, 막차가 부족한 정류장 주변을 찾아
 일하는 순서
 1. inspect_data로 어떤 자료가 있는지 먼저 확인해.
 2. 불러온 위치 자료(cctv, bell, light)마다 check_coverage로 빠진 곳이 없는지 확인해.
-   - 어떤 시에 방범 CCTV가 0곳이면, 목적과 상관없이 모든 CCTV를 세도록
+   - 어떤 시에 방범 CCTV가 없거나 5%도 안 되면, 목적과 상관없이 모든 CCTV를 세도록
      run_gap_analysis의 count_all_cctv_purposes를 true로 해. 왜 그랬는지 꼭 알려줘.
    - 비상벨은 장소 유형과 상관없이 정류장과의 거리로 공백을 판단해. 장소 유형은 설명에 쓰지 않아.
 3. 사용자 질문에서 지역과 시간대를 읽어. 지역이 있으면 look_up_place로 찾아봐.

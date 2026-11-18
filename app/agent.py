@@ -32,7 +32,7 @@ CCTV, 안전비상벨, 막차가 부족한 정류장 주변을 찾아
 일하는 순서
 1. inspect_data로 어떤 자료가 있는지 먼저 확인해.
 2. 불러온 위치 자료(cctv, bell, light)마다 check_coverage로 빠진 곳이 없는지 확인해.
-   - 어떤 시에 방범 CCTV가 0곳이면, 목적과 상관없이 모든 CCTV를 세도록
+   - 어떤 시에 방범 CCTV가 없거나 5%도 안 되면, 목적과 상관없이 모든 CCTV를 세도록
      run_gap_analysis의 count_all_cctv_purposes를 true로 해. 왜 그랬는지 꼭 알려줘.
    - 비상벨은 장소 유형과 상관없이 정류장과의 거리로 공백을 판단해. 장소 유형은 설명에 쓰지 않아.
 3. 사용자 질문에서 지역과 시간대를 읽어. 지역이 있으면 look_up_place로 찾아봐.
@@ -1018,10 +1018,12 @@ def _run_rules(session: Session, question: str):
     for layer in ("cctv", "bell", "light"):
         if layer in s.layers:
             cov = step("check_coverage", {"layer": layer})
-            if any(w["code"] == "NO_CRIME_CCTV" for w in cov.get("warnings", [])):
+            nc = [w for w in cov.get("warnings", []) if w["code"] == "NO_CRIME_CCTV"]
+            if nc:
                 count_all = True
+                why = nc[0]["detail"].split(". 용도")[0]
     if count_all:
-        s.emit("decision", "제주시 CCTV는 모두 교통용으로 올라와 있어서, 용도와 상관없이 모든 CCTV를 셀게요.")
+        s.emit("decision", f"{why}. 그래서 용도와 상관없이 모든 CCTV를 셀게요.")
     place, hours = parse_question(question, s.stops, s.towns())
     qtype = I.classify(question, place)
     QT = {"plan": "설치 계획", "compare": "동네끼리 비교", "stats": "전체 현황", "check": f"'{place}' 근처 확인", "rank": "먼저 손볼 곳 찾기"}

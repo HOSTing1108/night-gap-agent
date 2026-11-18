@@ -36,6 +36,7 @@ function placeHero() { if (!mapHero) return; mapHero.setCenter(matchMedia("(max-
 placeHero(); window.addEventListener("resize", placeHero);
 
 async function api(path, opts) {
+  if (window.PAGES_API) return window.PAGES_API(path, opts);   // 웹 데모: 서버 없이 브라우저 안에서 분석해요
   const r = await fetch(path, opts);
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || r.statusText);
@@ -47,9 +48,10 @@ async function refreshStatus() {
   const s = await api("/api/status");
   curSource = s.source;
   const m = $("#mode");
-  m.textContent = s.llm ? "Claude 연결됨" : "규칙 모드";
-  m.title = s.llm ? "Claude가 분석 순서를 정해요" : "인터넷 연결 없이도 같은 순서로 분석해요 (" + s.llm_note + ")";
+  m.textContent = s.llm ? "Claude 연결됨" : (s.mode_label || "규칙 모드");
+  m.title = s.llm ? "Claude가 분석 순서를 정해요" : (s.mode_label ? s.llm_note : "인터넷 연결 없이도 같은 순서로 분석해요 (" + s.llm_note + ")");
   m.className = "status" + (s.llm ? " llm" : "");
+  $("#sources").hidden = Object.keys(s.sources).length < 2;
   $("#sources").innerHTML = Object.keys(s.sources).map((k) =>
     `<button role="radio" aria-checked="${k === s.source}" data-src="${k}" title="${esc(s.sources[k])}">${esc(SOURCE_SHORT[k] || s.sources[k])}</button>`).join("");
   $("#sources").querySelectorAll("button").forEach((b) => b.addEventListener("click", async () => {

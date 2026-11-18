@@ -1,10 +1,16 @@
-# 안심하차 Agent
+# 안심하차 Agent · 내릴 때부터 안심하자
 
 밤에 버스에서 내려 걸어가는 사람은 많은데 주변에 **CCTV**나 **안전비상벨**이 없는 정류장을 찾아, 먼저 손볼 10곳과 고치는 방법, 예산에 맞춘 설치 계획까지 알려주는 AI Agent예요.
 
 - 범죄 지도나 위험 지도가 아니에요. **시설이 부족한 곳**을 찾는 도구예요.
 - 평소 말투로 물어보면 돼요. 예: "우리 애가 밤 10시에 노형에서 버스 내리는데 괜찮아?", "CCTV 5대를 놓는다면 어디가 좋아?"
 - 결과는 늘 같은 모양으로 나와요. **먼저 손볼 정류장, 고치는 방법, 근거 숫자, 설치 계획, 건의 문장**이 나와요.
+
+**웹 데모:** https://hosting1108.github.io/night-gap-agent/
+
+- 설치 없이 브라우저에서 바로 써 볼 수 있어요. 센터 PC 버전과 **같은 Agent 코드**가 브라우저 안에서 돌아가요(Pyodide).
+- 실제 공개 자료로 시작하고, CSV를 화면에 끌어다 놓으면 Agent가 알아보고 다시 분석해요. 올린 파일은 그 브라우저 밖으로 나가지 않아요.
+- 웹 데모는 규칙 모드로 동작해요. Claude 모드는 센터 PC 버전에서 API 키를 넣으면 써요.
 
 ## 1. 설치 (센터 PC, Windows 11)
 
@@ -99,7 +105,8 @@ data/public/         공개 자료 (정류장, CCTV, 비상벨, 학교, 시간�
 data/input/          센터에서 올린 자료와 제주데이터허브 정류장별 이용 합계
 docs/plan/           기획서 (plan_template.html → plan.html, nightgap_plan.pdf)
 docs/                결과 설명서, 데이터 명세, 설계 문서, Agent 지시문(prompts.md)
-tools/               자료 수집, 통계·차트, 기획서 만들기, 가상 자료 만들기
+pages/               웹 데모용 연결 코드 (bridge.js: 서버 대신 답하기, worker.js: 브라우저 안 파이썬 실행)
+tools/               자료 수집, 통계·차트, 기획서·웹 데모 만들기(build_pages.py), 가상 자료 만들기
 tests/               자동 테스트와 질문 이해 시험 (intent_cases.json)
 ```
 
@@ -140,8 +147,9 @@ python -m unittest discover tests
 python tools/make_results.py
 python tools/make_real_stats.py
 python tools/build_plan.py
+python tools/build_pages.py   # 웹 데모(site/)를 다시 만들어요
 ```
-- 첫 줄은 자동 테스트 21개를 실행해요(질문 이해 시험 40개 포함).
+- 첫 줄은 자동 테스트 22개를 실행해요(질문 이해 시험 40개 포함).
 - 둘째 줄은 결과 설명서의 가상 데이터 시나리오 3개를 `docs/results/`에 다시 만들어요.
 - 셋째 줄은 실제 자료 통계와 차트를 다시 만들어요(위성 밝기 집계에만 Pillow를 써요).
 - 넷째 줄은 기획서와 결과 설명서의 숫자를 다시 채우고 기획서 PDF를 만들어요(Chrome 필요).
