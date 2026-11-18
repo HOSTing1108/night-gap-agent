@@ -1,0 +1,15 @@
+# 키·개인 설정
+config.env
+.env
+# 사용자가 올린 CSV는 올리지 않아요 (정류장별 이용 집계만 예외)
+data/input/*.csv
+!data/input/hub_stop_daily_usage.csv
+data/input/hub_daily/
+# 내부 메모
+docs/board_questions.md
+# 기타
+__pycache__/
+*.pyc
+.DS_Store
+.claude/
+launch.json

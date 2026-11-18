@@ -1,0 +1,601 @@
+{
+  "stops_scored": 3732,
+  "usage_days": 25,
+  "usage_matched_pct": 92.4,
+  "radii": {
+    "cctv": 100,
+    "bell": 200
+  },
+  "cctv_points": 1134,
+  "bell_points": 805,
+  "categories": {
+    "both": 2848,
+    "no_bell": 428,
+    "no_cctv": 287,
+    "covered": 169
+  },
+  "usage_share_by_category": {
+    "both": 42.8,
+    "no_bell": 27.8,
+    "no_cctv": 10.6,
+    "covered": 18.8
+  },
+  "daily_use_total": 85131,
+  "blind_dark": 813,
+  "blind_dark_use": 1818,
+  "top10pct_usage_share": 72.8,
+  "areas": [
+    {
+      "area": "한경면",
+      "stops": 189,
+      "blind": 184,
+      "blind_dark": 70,
+      "use": 509,
+      "blind_use": 457,
+      "cctv": 0,
+      "bell": 24,
+      "blind_pct": 97.4,
+      "blind_use_pct": 89.8
+    },
+    {
+      "area": "구좌읍",
+      "stops": 172,
+      "blind": 160,
+      "blind_dark": 90,
+      "use": 1122,
+      "blind_use": 914,
+      "cctv": 3,
+      "bell": 20,
+      "blind_pct": 93.0,
+      "blind_use_pct": 81.5
+    },
+    {
+      "area": "애월읍",
+      "stops": 387,
+      "blind": 348,
+      "blind_dark": 41,
+      "use": 3784,
+      "blind_use": 2708,
+      "cctv": 13,
+      "bell": 48,
+      "blind_pct": 89.9,
+      "blind_use_pct": 71.6
+    },
+    {
+      "area": "조천읍",
+      "stops": 261,
+      "blind": 234,
+      "blind_dark": 91,
+      "use": 3046,
+      "blind_use": 1149,
+      "cctv": 17,
+      "bell": 36,
+      "blind_pct": 89.7,
+      "blind_use_pct": 37.7
+    },
+    {
+      "area": "한림읍",
+      "stops": 101,
+      "blind": 87,
+      "blind_dark": 14,
+      "use": 1457,
+      "blind_use": 532,
+      "cctv": 10,
+      "bell": 14,
+      "blind_pct": 86.1,
+      "blind_use_pct": 36.5
+    },
+    {
+      "area": "남원읍",
+      "stops": 238,
+      "blind": 203,
+      "blind_dark": 104,
+      "use": 1407,
+      "blind_use": 726,
+      "cctv": 47,
+      "bell": 4,
+      "blind_pct": 85.3,
+      "blind_use_pct": 51.6
+    },
+    {
+      "area": "대정읍",
+      "stops": 204,
+      "blind": 164,
+      "blind_dark": 59,
+      "use": 1295,
+      "blind_use": 627,
+      "cctv": 90,
+      "bell": 19,
+      "blind_pct": 80.4,
+      "blind_use_pct": 48.5
+    },
+    {
+      "area": "표선면",
+      "stops": 202,
+      "blind": 157,
+      "blind_dark": 115,
+      "use": 1062,
+      "blind_use": 444,
+      "cctv": 72,
+      "bell": 3,
+      "blind_pct": 77.7,
+      "blind_use_pct": 41.8
+    },
+    {
+      "area": "안덕면",
+      "stops": 188,
+      "blind": 137,
+      "blind_dark": 82,
+      "use": 1540,
+      "blind_use": 860,
+      "cctv": 94,
+      "bell": 5,
+      "blind_pct": 72.9,
+      "blind_use_pct": 55.9
+    },
+    {
+      "area": "성산읍",
+      "stops": 220,
+      "blind": 159,
+      "blind_dark": 82,
+      "use": 1407,
+      "blind_use": 768,
+      "cctv": 106,
+      "bell": 26,
+      "blind_pct": 72.3,
+      "blind_use_pct": 54.5
+    },
+    {
+      "area": "제주시 동지역",
+      "stops": 929,
+      "blind": 628,
+      "blind_dark": 43,
+      "use": 54749,
+      "blind_use": 23392,
+      "cctv": 298,
+      "bell": 202,
+      "blind_pct": 67.6,
+      "blind_use_pct": 42.7
+    },
+    {
+      "area": "서귀포시 동지역",
+      "stops": 641,
+      "blind": 387,
+      "blind_dark": 22,
+      "use": 13754,
+      "blind_use": 3843,
+      "cctv": 343,
+      "bell": 87,
+      "blind_pct": 60.4,
+      "blind_use_pct": 27.9
+    }
+  ],
+  "distance": {
+    "labels": [
+      "100m 이내",
+      "100~300m",
+      "300~500m",
+      "0.5~1km",
+      "1km 넘음"
+    ],
+    "cctv_all": [
+      15.9,
+      23.2,
+      11.2,
+      15.5,
+      34.2
+    ],
+    "cctv_top100": [
+      56.0,
+      38.0,
+      2.0,
+      2.0,
+      2.0
+    ],
+    "bell_all": [
+      4.8,
+      15.0,
+      15.0,
+      22.1,
+      43.1
+    ],
+    "bell_top100": [
+      13.0,
+      33.0,
+      29.0,
+      17.0,
+      8.0
+    ]
+  },
+  "cctv_purpose_by_city": {
+    "제주시": {
+      "교통": 382
+    },
+    "서귀포시": {
+      "기타": 568,
+      "방범·어린이보호": 175,
+      "교통": 9
+    }
+  },
+  "bell_place": {
+    "화장실": 804,
+    "기타": 1
+  },
+  "hourly": {
+    "from": "20250729",
+    "to": "20251026",
+    "days": 90,
+    "bands": [
+      {
+        "band": "01시-06시",
+        "per_day": 1120
+      },
+      {
+        "band": "07시-09시",
+        "per_day": 5148
+      },
+      {
+        "band": "10시-12시",
+        "per_day": 5129
+      },
+      {
+        "band": "13시-15시",
+        "per_day": 5101
+      },
+      {
+        "band": "16시-18시",
+        "per_day": 5351
+      },
+      {
+        "band": "19시-21시",
+        "per_day": 3476
+      },
+      {
+        "band": "22시-24시",
+        "per_day": 516
+      }
+    ],
+    "type_mix": [
+      {
+        "type": "일반",
+        "all_share": 49.9,
+        "late_share": 66.4,
+        "late_ratio": 2.66
+      },
+      {
+        "type": "경로",
+        "all_share": 21.1,
+        "late_share": 15.3,
+        "late_ratio": 1.45
+      },
+      {
+        "type": "청소년",
+        "all_share": 7.9,
+        "late_share": 11.6,
+        "late_ratio": 2.94
+      },
+      {
+        "type": "장애 일반",
+        "all_share": 7.4,
+        "late_share": 2.9,
+        "late_ratio": 0.8
+      },
+      {
+        "type": "장애 동반",
+        "all_share": 7.5,
+        "late_share": 2.5,
+        "late_ratio": 0.67
+      },
+      {
+        "type": "기타",
+        "all_share": 3.1,
+        "late_share": 0.4,
+        "late_ratio": 0.28
+      },
+      {
+        "type": "어린이",
+        "all_share": 1.5,
+        "late_share": 0.4,
+        "late_ratio": 0.53
+      },
+      {
+        "type": "유공 일반",
+        "all_share": 1.5,
+        "late_share": 0.4,
+        "late_ratio": 0.52
+      },
+      {
+        "type": "유공 동반",
+        "all_share": 0.0,
+        "late_share": 0.0,
+        "late_ratio": 0.2
+      }
+    ],
+    "dow": [
+      {
+        "dow": "월",
+        "late_share": 1.85
+      },
+      {
+        "dow": "화",
+        "late_share": 1.95
+      },
+      {
+        "dow": "수",
+        "late_share": 2.02
+      },
+      {
+        "dow": "목",
+        "late_share": 1.99
+      },
+      {
+        "dow": "금",
+        "late_share": 2.17
+      },
+      {
+        "dow": "토",
+        "late_share": 2.09
+      },
+      {
+        "dow": "일",
+        "late_share": 1.92
+      }
+    ],
+    "monthly": [
+      {
+        "month": "202312",
+        "late_share": 2.3
+      },
+      {
+        "month": "202401",
+        "late_share": 2.14
+      },
+      {
+        "month": "202402",
+        "late_share": 2.12
+      },
+      {
+        "month": "202403",
+        "late_share": 2.14
+      },
+      {
+        "month": "202404",
+        "late_share": 2.28
+      },
+      {
+        "month": "202405",
+        "late_share": 2.25
+      },
+      {
+        "month": "202406",
+        "late_share": 2.41
+      },
+      {
+        "month": "202407",
+        "late_share": 2.42
+      },
+      {
+        "month": "202408",
+        "late_share": 2.39
+      },
+      {
+        "month": "202409",
+        "late_share": 2.43
+      },
+      {
+        "month": "202410",
+        "late_share": 2.18
+      },
+      {
+        "month": "202411",
+        "late_share": 2.12
+      },
+      {
+        "month": "202412",
+        "late_share": 2.18
+      },
+      {
+        "month": "202501",
+        "late_share": 2.09
+      },
+      {
+        "month": "202502",
+        "late_share": 2.19
+      },
+      {
+        "month": "202503",
+        "late_share": 2.21
+      },
+      {
+        "month": "202504",
+        "late_share": 2.15
+      },
+      {
+        "month": "202505",
+        "late_share": 2.25
+      },
+      {
+        "month": "202506",
+        "late_share": 2.1
+      },
+      {
+        "month": "202507",
+        "late_share": 2.17
+      },
+      {
+        "month": "202508",
+        "late_share": 2.01
+      },
+      {
+        "month": "202509",
+        "late_share": 1.94
+      },
+      {
+        "month": "202510",
+        "late_share": 2.0
+      }
+    ]
+  },
+  "robustness": {
+    "variants": [
+      {
+        "setting": "CCTV 기준 50m",
+        "kept": 7,
+        "of": 10
+      },
+      {
+        "setting": "CCTV 기준 150m",
+        "kept": 7,
+        "of": 10
+      },
+      {
+        "setting": "비상벨 기준 100m",
+        "kept": 6,
+        "of": 10
+      },
+      {
+        "setting": "비상벨 기준 300m",
+        "kept": 8,
+        "of": 10
+      }
+    ],
+    "n": 4,
+    "base": 10,
+    "stable": 4,
+    "mostly": 6,
+    "avg_kept": 7.0,
+    "verdict": "보통이에요"
+  },
+  "top10": [
+    {
+      "rank": 1,
+      "name": "한라병원",
+      "area": "연동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 946.84,
+      "cctv_m": 153,
+      "bell_m": 541,
+      "stay": 4
+    },
+    {
+      "rank": 2,
+      "name": "제주대학교",
+      "area": "영평동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 849.44,
+      "cctv_m": 1084,
+      "bell_m": 1659,
+      "stay": 4
+    },
+    {
+      "rank": 3,
+      "name": "제주도청 신제주로터리",
+      "area": "연동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 671.16,
+      "cctv_m": 274,
+      "bell_m": 358,
+      "stay": 4
+    },
+    {
+      "rank": 4,
+      "name": "제주여자중고등학교(광양방면)",
+      "area": "아라2동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 428.56,
+      "cctv_m": 595,
+      "bell_m": 273,
+      "stay": 3
+    },
+    {
+      "rank": 5,
+      "name": "부영아파트",
+      "area": "노형동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 371.32,
+      "cctv_m": 222,
+      "bell_m": 354,
+      "stay": 4
+    },
+    {
+      "rank": 6,
+      "name": "아라동주민센터",
+      "area": "아라1동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 354.96,
+      "cctv_m": 138,
+      "bell_m": 1233,
+      "stay": 3
+    },
+    {
+      "rank": 7,
+      "name": "아라주공아파트/아라스위첸아파트",
+      "area": "아라1동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 342.74,
+      "cctv_m": 114,
+      "bell_m": 1539,
+      "stay": 2
+    },
+    {
+      "rank": 8,
+      "name": "고산동산(아라방면) / 제주4.3 트라우마센터",
+      "area": "이도2동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 326.0,
+      "cctv_m": 185,
+      "bell_m": 246,
+      "stay": 1
+    },
+    {
+      "rank": 9,
+      "name": "시민회관",
+      "area": "이도1동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 299.34,
+      "cctv_m": 275,
+      "bell_m": 395,
+      "stay": 2
+    },
+    {
+      "rank": 10,
+      "name": "용천마을",
+      "area": "삼도1동",
+      "gaps": [
+        "눈 공백(CCTV 없음)",
+        "벨 공백(비상벨 없음)"
+      ],
+      "demand": 262.28,
+      "cctv_m": 116,
+      "bell_m": 529,
+      "stay": 1
+    }
+  ]
+}

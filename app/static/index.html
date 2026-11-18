@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>안심하차 Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="gnav">
+  <div class="gnav-in">
+    <a class="brand" href="/" aria-label="안심하차 처음 화면">
+      <span class="moon" aria-hidden="true"></span>
+      <span class="name">안심하차</span>
+    </a>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="화면 이동">
+      <button role="tab" aria-selected="true" data-tab="map">홈</button>
+      <button role="tab" aria-selected="false" data-tab="list">우선 개선 <span id="tab-n"></span></button>
+      <button role="tab" aria-selected="false" data-tab="plan">설치 계획</button>
+      <button role="tab" aria-selected="false" data-tab="charts">한눈에 보기</button>
+      <button role="tab" aria-selected="false" data-tab="steps">Agent가 한 일</button>
+      <button role="tab" aria-selected="false" data-tab="doc">건의서</button>
+    </nav>
+    <div class="gnav-right">
+      <div class="seg" id="sources" role="radiogroup" aria-label="자료 선택"></div>
+      <button class="link-btn" id="files-btn" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h4l2 2h7A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/></svg>
+        <span id="files-count">자료</span>
+      </button>
+      <span class="status" id="mode">확인 중</span>
+    </div>
+  </div>
+  <div class="files-pop" id="files-pop" hidden>
+    <div class="pop-head">
+      <b>불러올 자료</b>
+      <label class="btn sm"><input type="file" id="upload" accept=".csv" multiple>CSV 올리기</label>
+    </div>
+    <ul id="files"></ul>
+    <p class="pop-hint">CSV를 올리거나 화면에 끌어다 놓으면 Agent가 어떤 자료인지 알아보고 바로 다시 분석해요. 센터 <b>3-03 정류소 정보</b>·<b>3-04 정류소별 이용 현황</b>을 넣으면 밤에 내리는 사람 기준으로, 보안등 자료를 넣으면 가로등 공백까지 계산해요.</p>
+  </div>
+</header>
+<div class="drop-veil" aria-hidden="true"><div><b>여기에 놓으세요</b><span>CSV를 놓으면 Agent가 어떤 자료인지 알아보고 다시 분석해요</span></div></div>
+
+<main id="results">
+  <!-- 홈: 소개 → Agent 작업 공간(대화 + 지도) -->
+  <div class="panel home" data-panel="map">
+
+    <!-- 1. 첫 화면 -->
+    <section class="lp-hero" id="top">
+      <canvas id="map-hero" aria-hidden="true"></canvas>
+      <div class="lp-hero-fade" aria-hidden="true"></div>
+      <button class="lp-hero-hit" id="hero-open" aria-label="지도를 크게 보기"></button>
+      <button class="hero-close" id="hero-close">← 처음 화면으로</button>
+      <div class="lp-wrap">
+        <p class="lp-kicker"><i></i>안심하차 Agent · 제주 버스 정류장 밤길 점검</p>
+        <h1>버스에서 내린 뒤,<br>밤길을 지키는 <span class="lit">AI Agent</span></h1>
+        <p class="lp-sub">제주 버스 정류장 4,080곳 가운데 이용하는 사람은 많은데 CCTV도 비상벨도 닿지 않는 곳을 찾아, 먼저 손볼 곳과 고치는 방법, 예산에 맞춘 설치 계획까지 알려드려요.</p>
+        <div class="hero-cards">
+          <article class="hc"><p class="hc-k"><i class="dot blind"></i>CCTV·비상벨 없는 정류장</p><b id="hc-blind">2,848<small>곳</small></b><span id="hc-blind-s">이용 기록이 있는 정류장의 76%</span></article>
+          <article class="hc"><p class="hc-k"><i class="dot prio"></i>Agent가 고른 1순위</p><b id="hc-top" class="hc-name">한라병원</b><span id="hc-top-s">하루 947명 · 근처 CCTV 방향 돌리기</span></article>
+          <article class="hc"><p class="hc-k"><i class="dot sat"></i>밤 10시~자정 승차</p><b id="hc-late">516<small>명</small></b><span>하루 평균, 제주 전체</span></article>
+        </div>
+        <div class="lp-cta">
+          <button class="btn" data-scroll="workspace">Agent에게 물어보기</button>
+          <button class="btn ghost" id="hero-map-btn">지도 크게 보기</button>
+        </div>
+      </div>
+      <p class="lp-hero-hint">지도를 누르면 크게 볼 수 있어요 ↗</p>
+      <button class="lp-mouse" data-scroll="lp-intro" aria-label="아래로"><i></i></button>
+    </section>
+
+    <!-- 2. 한 문단 소개 -->
+    <section class="lp-light lp-intro" id="lp-intro">
+      <div class="lp-wrap">
+        <p class="lp-label">안심하차 Agent</p>
+        <p class="lp-statement">밤에 버스에서 내린 사람은 대부분 걸어서 집으로 가요. <b>밤길은 정류장에서 시작돼요.</b>
+          안심하차 Agent는 제주빅데이터센터·제주데이터허브·공공데이터포털에 흩어진 버스 이용, CCTV, 비상벨, 학교 자료를 하나로 합쳐
+          <b>이용은 많은데 CCTV도 비상벨도 없는 정류장</b>을 찾고, 정해진 예산으로 <b>가장 많은 사람을 지킬 수 있는 설치 계획</b>까지 만들어요.</p>
+      </div>
+    </section>
+
+    <!-- 3. 숫자 카드 -->
+    <section class="lp-light lp-stats">
+      <div class="lp-wrap">
+        <div class="bento">
+          <article class="bc navy"><b id="ab-blind-n">2,848<small>곳</small></b><span>CCTV도 비상벨도 닿지 않는 제주 버스 정류장</span><button class="pill" data-scroll="workspace">지도에서 보기</button></article>
+          <article class="bc black"><b id="ab-blind">76<small>%</small></b><span>이용 기록이 있는 정류장 중 그런 곳의 비율</span><button class="pill" data-goto="charts">한눈에 보기</button></article>
+          <article class="bc blue"><b id="ab-late">516<small>명</small></b><span>밤 10시~자정에 버스를 타는 사람 (하루 평균)</span><button class="pill" data-goto="charts">시간대 보기</button></article>
+          <article class="bc black"><b>11.6<small>%</small></b><span>밤 10시 이후 승차 중 청소년 비율. 하루 전체(7.9%)보다 높아요</span><button class="pill" data-ask="우리 애가 학원 끝나고 밤 10시에 버스 내리는데 학교 근처 정류장 괜찮아?">학생 귀갓길 묻기</button></article>
+          <article class="bc navy"><b id="ab-school">672<small>곳</small></b><span>학교에서 500m 안인데 CCTV도 비상벨도 없는 정류장</span><button class="pill" data-goto="list">우선 개선 보기</button></article>
+          <article class="bc white"><h3>제주 공공데이터 7종으로<br>직접 계산한 숫자예요</h3><p>정류장 위치, 정류장별 이용, 시간대별 승차, CCTV 2종, 비상벨, 학교 위치</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 주제를 고른 이유 -->
+    <section class="lp-light lp-why">
+      <div class="lp-wrap">
+        <header class="lp-head"><h2>이 주제를 고른 이유</h2><p>정류장 주변 밤길은 누구나 겪지만, 어디가 비어 있는지 알려주는 곳은 없었어요.</p></header>
+        <div class="trio">
+          <article class="tc"><span class="tag">현장</span><h3>정류장은 담당이 분명해요</h3><p>위치가 정확하고 이용 인원이 기록되고 맡는 부서가 있어서, 건의가 실제 예산으로 이어지기 쉬운 곳이에요.</p></article>
+          <article class="tc"><span class="tag">자료</span><h3>자료가 세 곳에 흩어져 있어요</h3><p>버스 이용은 빅데이터센터·데이터허브에, CCTV·비상벨·학교 위치는 공공데이터포털에 있어요. 아이디와 좌표가 서로 달라 직접 합치기 어려워요.</p></article>
+          <article class="tc"><span class="tag">행동</span><h3>무엇을 몇 대 놓을지도 정해야 해요</h3><p>비어 있는 곳을 알아도 "그래서 어디에, 무엇을, 몇 대"는 또 계산해야 해요. 그래서 설치 계획까지 함께 만들어요.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Agent가 하는 일 -->
+    <section class="lp-light lp-what">
+      <div class="lp-wrap">
+        <header class="lp-head"><h2>Agent가 하는 일</h2><p>질문 하나로 자료 확인부터 건의서까지 Agent가 이어서 해요.</p></header>
+        <div class="trio">
+          <article class="wc" data-goto="list"><img src="/static/img/lp_pick.jpg" alt="1순위 정류장 카드"><div><span class="tag">먼저 손볼 곳</span><h3>1순위 정류장과 고치는 방법</h3><p>CCTV를 새로 달지, 근처 CCTV 방향만 돌릴지 정해 주고, 걸어서 몇 분인지 보여줘요.</p></div></article>
+          <article class="wc" data-goto="plan"><img src="/static/img/lp_game.jpg" alt="설치 계획 화면"><div><span class="tag">설치 계획</span><h3>예산에 맞춘 설치 계획</h3><p>예산을 정하면 Agent가 같은 돈으로 가장 많은 사람을 지키는 곳부터 골라요. 직접 바꿔 볼 수도 있어요.</p></div></article>
+          <article class="wc" data-goto="steps"><img src="/static/img/lp_pipe.jpg" alt="Agent 분석 흐름"><div><span class="tag">분석 과정</span><h3>Agent가 판단한 과정</h3><p>어떤 자료를 어떤 순서로 계산했고 중간에 무엇을 판단했는지 그림으로 보여줘요.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Agent 작업 공간: 대화 + 지도 -->
+    <section class="ws" id="workspace">
+      <div class="ws-head">
+        <div><p class="eyebrow">Agent에게 물어보세요</p><h2>물어보면 지도에 바로 보여드려요</h2></div>
+        <p class="ws-sub">"열시 반에 아라동에서 내리는데 괜찮아?", "예산 1억이면?", "어느 동네가 제일 비어 있어?"처럼 편하게 물어보세요.</p>
+      </div>
+      <div class="ws-grid">
+        <aside class="ws-chat">
+          <div class="chat-log" id="chat-log" aria-live="polite">
+            <div class="msg agent"><b>안심하차 Agent</b><p>안녕하세요. 제주 버스 정류장 주변에 CCTV와 비상벨이 있는지 살펴보고, 먼저 손볼 곳과 설치 계획을 알려드려요. 아래 예시를 눌러 보거나 직접 물어보세요.</p></div>
+          </div>
+          <div class="verdict" id="summary">
+            <p class="v-eyebrow" id="sum-eyebrow">분석 중</p>
+            <p class="v-title" id="sum-title">Agent가 자료를 살펴보고 있어요</p>
+            <ol class="stepper" id="stepper">
+              <li data-step="1"><i></i>자료 확인</li>
+              <li data-step="2"><i></i>자료 점검</li>
+              <li data-step="3"><i></i>정류장 계산</li>
+              <li data-step="4"><i></i>결과 정리</li>
+            </ol>
+            <div class="actions" id="actions" hidden>
+              <button class="btn sm" data-goto="list">10곳 보기</button>
+              <button class="btn sm ghost" id="doc-btn">건의서 보기</button>
+              <button class="btn sm ghost" data-goto="steps">Agent가 한 일</button>
+            </div>
+          </div>
+          <div class="chips" id="chips">
+            <button data-q="제주 전체에서 밤길 공백이 큰 정류장 10곳 알려줘">제주 전체 10곳</button>
+            <button data-q="딸이 열시 반쯤 아라동에서 내리는데 괜찮을까">열시 반, 아라동</button>
+            <button data-q="예산 1억이면 CCTV를 어디에 달아야 해?">예산 1억이면?</button>
+            <button data-q="어느 동네가 제일 비어 있어?">어느 동네가 제일?</button>
+            <button data-q="애월 쪽에 CCTV나 비상벨을 먼저 놓아야 할 곳 건의서 만들어줘">애월 건의서</button>
+          </div>
+          <form class="askbox" id="ask">
+            <input id="q" autocomplete="off" placeholder="우리 애가 밤 10시에 노형에서 내리는데 괜찮아?" aria-label="질문">
+            <button type="submit" class="btn" id="go">보내기</button>
+          </form>
+        </aside>
+
+        <div class="ws-map">
+          <section class="stage">
+            <canvas id="map3d" aria-label="밤의 제주 3D 지도"></canvas>
+            <div class="dark-stat" id="dark-stat" hidden>
+              <b id="ds-n">-</b>
+              <span><i id="ds-scope">밤에 사람이 내리는 정류장</i> <em id="ds-total">-</em>곳 중 CCTV도 비상벨도 닿지 않는 곳
+                <i id="ds-sat" hidden>· 그중 <em id="ds-sat-n">-</em>은 위성으로 봐도 어두워요</i></span>
+            </div>
+            <div class="crumbs" id="crumbs" hidden></div>
+            <div class="map-ctl" aria-label="지도 조작">
+              <button id="m-in" title="확대" aria-label="확대">+</button>
+              <button id="m-out" title="축소" aria-label="축소">−</button>
+              <button id="m-left" title="왼쪽으로 돌리기" aria-label="왼쪽으로 돌리기">⟲</button>
+              <button id="m-right" title="오른쪽으로 돌리기" aria-label="오른쪽으로 돌리기">⟳</button>
+              <button id="m-tilt" title="기울기 바꾸기" aria-label="기울기 바꾸기">◢</button>
+              <button id="m-home" title="섬 전체 보기" aria-label="섬 전체 보기">⌂</button>
+              <button id="m-big" class="m-big" title="지도 크게 보기" aria-label="지도 크게 보기">크게</button>
+            </div>
+            <aside class="inspect" id="inspect" hidden></aside>
+            <p class="map-hint" id="map-hint">동네나 번호를 누르면 확대돼요 · 끌면 이동 · Shift+끌기로 회전 · 휠로 확대</p>
+          </section>
+          <div class="strip">
+            <div class="stats" id="kpis"></div>
+            <div class="map-legend">
+              <span><i class="dot blind"></i>CCTV·벨 모두 없음</span>
+              <span><i class="dot half"></i>하나만 있음</span>
+              <span><i class="dot cctv"></i>CCTV</span>
+              <span><i class="dot bell"></i>비상벨</span>
+              <span><i class="dot sat"></i>위성 불빛</span>
+              <button class="text-btn" id="png">PNG 저장</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 약속과 출처 -->
+    <section class="lp-foot">
+      <div class="lp-wrap">
+        <h2>안심하차 Agent가 지키는 약속</h2>
+        <div class="ar">
+          <div><b>위험 지도가 아니에요</b><span>범죄 자료는 쓰지 않아요. 시설이 부족한 곳, 먼저 보강하면 좋은 곳을 알려줘요.</span></div>
+          <div><b>숫자를 지어내지 않아요</b><span>모든 숫자는 정해진 계산식으로 구해요. AI는 순서를 정하고 설명만 해요.</span></div>
+          <div><b>원래 자료는 밖으로 나가지 않아요</b><span>AI에는 집계한 숫자만 보내요. 개인정보는 다루지 않아요.</span></div>
+          <div><b>작은 숫자는 가려요</b><span>하루 10명 미만인 값은 "10명 미만"으로 보여줘 반출 기준을 지켜요.</span></div>
+        </div>
+        <p class="lp-src">자료: 제주빅데이터센터 버스 정류소 정보·이용 현황 · 제주데이터허브 정류소별 버스 이용자, 시간대별 승차, CCTV 정보 · 공공데이터포털 버스정류소현황, 전국CCTV표준데이터, 안전비상벨위치, 초중등학교위치 · NASA Black Marble(GIBS)</p>
+        <button class="btn" data-scroll="workspace">Agent에게 물어보기</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="page panel" data-panel="list" hidden>
+    <header class="page-head"><p class="eyebrow">우선 개선</p><h2 id="list-title">우선 개선 장소</h2>
+      <p class="page-sub" id="list-sub">이용이 많고 CCTV·비상벨이 없는 순서예요. 정류장을 누르면 자세한 내용이 나와요.</p></header>
+    <article class="tile pick-hero" id="pick-hero" hidden></article>
+    <div class="two-col">
+      <article class="tile list-tile">
+        <div class="tile-head"><h3>순위</h3><a class="text-btn" id="csv" href="/api/report.csv" hidden>CSV 저장</a></div>
+        <div id="cards" class="rank-list">
+          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+        </div>
+      </article>
+      <div class="side-col">
+        <article class="tile verify" id="verify" hidden></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="page panel" data-panel="plan" hidden>
+    <header class="page-head"><p class="eyebrow">설치 계획</p><h2>예산이 정해져 있다면, 어디부터 놓을까요?</h2>
+      <p class="page-sub">정류장마다 CCTV를 새로 달지, 근처 CCTV 방향만 돌릴지, 비상벨을 달지 골라 보세요. 고를 때마다 몇 명에게 새로 CCTV·비상벨이 닿는지 바로 보여 주고, Agent의 추천과 비교해 드려요.</p></header>
+    <article class="tile game-board" id="game-board"></article>
+    <div class="two-col">
+      <article class="tile">
+        <div class="tile-head"><h3>후보 정류장</h3><span class="muted" id="game-count"></span></div>
+        <div class="game-filter" id="game-filter"></div>
+        <ol class="game-list" id="game-list"></ol>
+      </article>
+      <div class="side-col">
+        <article class="tile" id="game-compare"></article>
+        <article class="tile" id="game-badges"></article>
+        <article class="tile sim-tile">
+          <div class="tile-head"><h3>몇 대를 놓으면 몇 명을 지킬까</h3><div class="seg" id="sim-kind" role="radiogroup" aria-label="설치 시설"></div></div>
+          <div class="sim-ctl"><input type="range" id="sim-k" min="1" max="30" value="10" aria-label="설치 대수"><output id="sim-k-out">10대</output></div>
+          <div class="sim-big" id="sim-big"></div>
+          <div id="sim-curve" class="sim-curve"></div>
+          <details class="sim-more"><summary>설치 순서 보기</summary><ol class="sim-picks" id="sim-picks"></ol></details>
+        </article>
+        <article class="tile" id="sim-bench"></article>
+        <article class="tile" id="rx-tile"></article>
+        <article class="tile" id="school-tile" hidden></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="page panel" data-panel="charts" hidden>
+    <header class="page-head"><p class="eyebrow">한눈에 보기</p><h2>숫자로 보는 제주 밤길</h2>
+      <p class="page-sub">꼭 알아야 할 내용 네 가지만 모았어요. 카드를 누르면 자세한 화면으로 가요.</p></header>
+    <div class="ins-kpis" id="ins-kpis"></div>
+    <div class="ins-grid" id="ins-grid"></div>
+  </section>
+
+  <section class="page panel" data-panel="steps" hidden>
+    <header class="page-head"><p class="eyebrow">Agent가 한 일</p><h2>Agent는 이렇게 찾았어요</h2>
+      <p class="page-sub">Agent가 어떤 자료를 어떤 순서로 계산했고, 중간에 무엇을 판단했는지 차례대로 보여드려요.</p></header>
+    <article class="tile pipe-tile" id="pipe" hidden></article>
+    <div class="two-col">
+      <article class="tile">
+        <div class="tile-head"><h3>과정</h3><span class="muted" id="steps-count"></span></div>
+        <ol class="timeline" id="steps"></ol>
+      </article>
+      <article class="tile answer-tile">
+        <div class="tile-head"><h3>Agent의 설명</h3></div>
+        <p id="sum-text" class="sum-text"></p>
+      </article>
+    </div>
+  </section>
+
+  <section class="page panel" data-panel="doc" hidden>
+    <div class="doc-bar">
+      <span>그대로 인쇄하거나 PDF로 저장해서 쓰시면 돼요.</span>
+      <button class="btn sm" id="doc-print">인쇄 · PDF로 저장</button>
+    </div>
+    <article class="paper" id="paper"><p class="doc-empty">분석이 끝나면 건의서가 여기에 만들어져요.</p></article>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>공개된 시설 자료로 "먼저 보강하면 좋은 곳"을 계산한 결과예요. 밤 불빛 위성 자료: NASA Black Marble 2016, NASA GIBS(Global Imagery Browse Services) 제공.</p>
+</footer>
+
+<script src="/static/jeju_outline.js"></script>
+<script src="/static/map3d.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
