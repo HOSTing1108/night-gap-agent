@@ -4,16 +4,17 @@ const PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/";
 importScripts(PYODIDE + "pyodide.js");
 
 let py = null;
+const NC = { cache: "no-cache" };   // 바뀐 Agent 코드·자료가 바로 반영되게 매번 확인해요
 let queue = Promise.resolve();
 const run = (fn) => (queue = queue.then(fn).catch((e) => postMessage({ type: "fatal", error: String(e) })));
 
 async function init() {
   py = await loadPyodide({ indexURL: PYODIDE });
-  const m = await (await fetch("../manifest.json")).json();
+  const m = await (await fetch("../manifest.json", NC)).json();
   for (const d of ["/app/app", "/app/data/input", "/app/data/public", "/app/data/uploads"]) py.FS.mkdirTree(d);
-  await Promise.all(m.py.map(async (f) => py.FS.writeFile("/app/app/" + f, await (await fetch("../py/" + f)).text())));
+  await Promise.all(m.py.map(async (f) => py.FS.writeFile("/app/app/" + f, await (await fetch("../py/" + f, NC)).text())));
   await Promise.all(m.data.map(async (f) => py.FS.writeFile("/app/data/" + f,
-    new Uint8Array(await (await fetch("../data/" + f)).arrayBuffer()))));
+    new Uint8Array(await (await fetch("../data/" + f, NC)).arrayBuffer()))));
   py.globals.set("post_event", (s) => postMessage({ type: "event", e: JSON.parse(s) }));
   await py.runPythonAsync(`
 import sys, os, json

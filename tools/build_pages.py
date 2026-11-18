@@ -7,6 +7,7 @@
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -42,8 +43,14 @@ def main():
     html = html.replace('<script src="static/jeju_outline.js"></script>',
                         '<script src="pages/bridge.js"></script>\n<script src="static/jeju_outline.js"></script>', 1)
     assert "pages/bridge.js" in html
-    open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(html)
     shutil.copytree(os.path.join(ROOT, "pages"), os.path.join(OUT, "pages"))
+    # 고칠 때마다 주소가 바뀌게 해서, 브라우저에 남은 옛 파일이 섞이지 않게 해요
+    for rel in ("static/style.css", "static/app.js", "static/map3d.js", "static/jeju_outline.js", "pages/bridge.js"):
+        parts = [rel] + (["pages/worker.js"] if rel == "pages/bridge.js" else [])   # 연결 코드 주소는 엔진(worker)이 바뀌어도 바뀌어요
+        v = hashlib.sha1(b"".join(open(os.path.join(OUT, x), "rb").read() for x in parts)).hexdigest()[:8]
+        assert f'"{rel}"' in html, rel
+        html = html.replace(f'"{rel}"', f'"{rel}?v={v}"')
+    open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(html)
 
     # 2. Agent 코드와 자료
     os.makedirs(os.path.join(OUT, "py"))
