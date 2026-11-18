@@ -32,8 +32,17 @@ const mapHero = $("#map-hero") ? new NightMap3D($("#map-hero"), {
   font: getComputedStyle(document.body).fontFamily,
   nightLights: "/static/nightlights_jeju_2016.png",
 }) : null;
-function placeHero() { if (!mapHero) return; mapHero.setCenter(matchMedia("(max-width: 900px)").matches ? 0.5 : 0.74, matchMedia("(max-width: 900px)").matches ? 0.62 : 0.52); }
-placeHero(); window.addEventListener("resize", placeHero);
+function placeHero() { if (!mapHero) return; const narrow = matchMedia("(max-width: 900px)").matches, phone = matchMedia("(max-width: 600px)").matches;
+  let y = narrow ? 0.62 : 0.52;
+  if (phone) {   // 휴대폰: 버튼 아래 빈 자리 한가운데에 섬을 놓아요
+    const hero = $(".lp-hero"), cta = $(".lp-cta");
+    if (hero && cta) {
+      const h = hero.getBoundingClientRect(), b = cta.getBoundingClientRect().bottom - h.top;
+      if (h.height > 0) y = Math.min(0.92, (b + (h.height - b) / 2) / h.height);
+    }
+  }
+  mapHero.setCenter(narrow ? 0.5 : 0.74, y); }
+placeHero(); window.addEventListener("resize", placeHero); window.addEventListener("load", placeHero);
 
 async function api(path, opts) {
   if (window.PAGES_API) return window.PAGES_API(path, opts);   // 웹 데모: 서버 없이 브라우저 안에서 분석해요
@@ -689,7 +698,7 @@ function docHTML({ sm, h, cards, rr, today, scope, demo, img }) {
   // 6. plan
   if (plan && plan.rows.length) SEC.push(`${H(`설치 계획안 (예산 ${won(G.budget)})`)}
     <p>${plan.mine ? "설치 계획 화면에서 직접 고른 계획입니다." : "Agent가 같은 돈으로 가장 많은 사람을 지킬 수 있는 곳부터 고른 계획입니다."} 비용은 CCTV 새로 달기 ${G.costs.new_cctv}만원, 방향 돌리기 ${G.costs.adjust_cctv}만원, 비상벨 달기 ${G.costs.bell}만원으로 계산했습니다.</p>
-    <table class="doc-table"><thead><tr><th>순서</th><th>정류장</th><th>조치</th><th>비용</th><th>새로 지키는<br>하루 이용자</th></tr></thead>
+    <table class="doc-table"><thead><tr><th>순서</th><th>정류장</th><th>조치</th><th>비용</th><th>새로 닿는<br>하루 이용자</th></tr></thead>
     <tbody>${plan.rows.slice(0, 15).map((r, i) => `<tr><td>${i + 1}</td><td>${esc(r.c.name)}</td><td class="l">${esc(r.acts.join(" + "))}</td><td>${r.cost.toLocaleString()}만원</td><td>${r.users.toLocaleString()}명</td></tr>`).join("")}
     ${plan.rows.length > 15 ? `<tr><td></td><td class="l" colspan="2">외 ${plan.rows.length - 15}곳 (${plan.rows.slice(15).map((r) => esc(r.c.name)).slice(0, 6).join(", ")} 등)</td><td>${plan.rows.slice(15).reduce((a, r) => a + r.cost, 0).toLocaleString()}만원</td><td>${plan.rows.slice(15).reduce((a, r) => a + r.users, 0).toLocaleString()}명</td></tr>` : ""}
     <tr class="sum"><td></td><td>합계 ${plan.rows.length}곳</td><td></td><td>${plan.ev.cost.toLocaleString()}만원</td><td>CCTV ${Math.round(plan.ev.eu).toLocaleString()}명 · 벨 ${Math.round(plan.ev.bu).toLocaleString()}명</td></tr></tbody></table>
@@ -1169,7 +1178,8 @@ function openHeroMap() {
   setTimeout(() => {
     hero.appendChild(stage);
     hero.classList.add("open");
-    requestAnimationFrame(() => { placeMap(); map.redraw(); map.home(0); setTimeout(() => $("#m-in").click(), 80); });
+    hero.style.height = Math.max(320, window.innerHeight - hero.getBoundingClientRect().top) + "px";   // 보이는 화면에 딱 맞게
+    requestAnimationFrame(() => { placeMap(); map.redraw(); map.home(0); if (!matchMedia("(max-width: 600px)").matches) setTimeout(() => $("#m-in").click(), 80); });
   }, STILL ? 0 : 420);
 }
 function closeHeroMap() {
@@ -1179,6 +1189,7 @@ function closeHeroMap() {
   sel = { zone: null, stop: null }; drawInspect();
   wsMap.insertBefore(stage, wsMap.querySelector(".strip"));
   hero.classList.remove("open", "opening");
+  hero.style.height = "";
   document.body.classList.remove("hero-map-open");
   requestAnimationFrame(() => { placeMap(); map.redraw(); map.home(0); if (mapHero) mapHero.redraw(); });
 }

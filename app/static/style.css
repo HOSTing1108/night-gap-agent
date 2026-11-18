@@ -1080,3 +1080,25 @@ body.hero-map-open { overflow: hidden; }
 .drop-veil b { font-size: 22px; } .drop-veil span { font-size: 14px; color: #c9c9d1; }
 body.dropping .drop-veil { display: grid; }
 .msg.agent p { white-space: pre-line; }
+
+/* 휴대폰: 첫 화면 지도와 크게 보기 */
+@media (max-width: 600px) {
+  .lp-hero-hint { display: none; }
+  .lp-hero { padding-bottom: 300px; }
+  .lp-mouse { display: none; }
+  .lp-hero .lp-cta .btn.ghost { background: rgba(22,22,23,.85); }
+  .lp-hero.open > .stage .map-ctl { top: 64px; right: 12px; }
+  .lp-hero.open > .stage .crumbs { left: 12px; top: 116px; }
+  .lp-hero.open > .stage .map-hint { display: none; }
+  .lp-hero.open > .stage .inspect { top: auto; left: 12px; right: 12px; bottom: 12px; width: auto; max-height: 52%; overflow: auto; }
+  .lp-hero.open > .stage .dark-stat { left: 12px; right: 12px; bottom: 12px; max-width: none; }
+  .hero-close { left: 12px !important; top: 12px !important; }
+}
+/* 좁은 화면에서 첫 화면 지도를 크게 볼 때: 경로·정보창을 지도 위에 띄워요 */
+@media (max-width: 900px) {
+  .lp-hero.open > .stage { display: block; }
+  .lp-hero.open > .stage .crumbs { position: absolute; margin: 0; z-index: 4; left: 12px; top: 116px; max-width: calc(100% - 24px); }
+  .lp-hero.open > .stage .map-ctl { margin: 0; }
+  .lp-hero.open > .stage .inspect { position: absolute; margin: 0; z-index: 4; top: auto; left: 12px; right: 12px; bottom: 12px; width: auto; max-height: 52%; overflow: auto; }
+}
+.lp-hero.open { padding-bottom: 0 !important; min-height: 0 !important; }
