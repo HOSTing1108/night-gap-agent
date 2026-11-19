@@ -10,18 +10,14 @@
 
 <br>
 
-![Claude](https://img.shields.io/badge/Claude-Opus%205.5-D97757?style=flat-square)
-![Python](https://img.shields.io/badge/Python-3.10%2B%20표준%20라이브러리-3776AB?style=flat-square&logo=python&logoColor=white)
-![3D map](https://img.shields.io/badge/3D%20밤%20지도-외부%20라이브러리%20없음-1F2937?style=flat-square)
-![Pyodide](https://img.shields.io/badge/웹%20데모-Pyodide-4D7CFE?style=flat-square)
-![tests](https://img.shields.io/badge/tests-22%20passed-2EA44F?style=flat-square)
-![intent](https://img.shields.io/badge/질문%20이해-40%2F40-F0A33A?style=flat-square)
+![Claude](https://img.shields.io/badge/Claude-Opus%205.5-D97757?style=flat)
+![Python](https://img.shields.io/badge/Python-3.10%2B%20표준%20라이브러리-3776AB?style=flat&logo=python&logoColor=white)
+![3D map](https://img.shields.io/badge/3D%20밤%20지도-외부%20라이브러리%20없음-1F2937?style=flat)
+![Pyodide](https://img.shields.io/badge/웹%20데모-Pyodide-4D7CFE?style=flat)
+![tests](https://img.shields.io/badge/tests-22%20passed-2EA44F?style=flat)
+![intent](https://img.shields.io/badge/질문%20이해-40%2F40-F0A33A?style=flat)
 
-**[🌙 웹 데모 바로 써 보기](https://hosting1108.github.io/night-gap-agent/)**
-
-[기획서 PDF](docs/plan/nightgap_plan.pdf) · [결과 설명자료](docs/result_explanation.md) · [데이터 활용 명세](docs/data_spec.md) · [Agent Prompt·Tool](docs/prompts.md) · [설계 문서](docs/design.md)
-
-<sub>제주 AI·빅데이터 활용 AI Agent 개발 챌린지 2026 출품작 · 개인 참가</sub>
+🌙 **[웹 데모](https://hosting1108.github.io/night-gap-agent/)** &nbsp;|&nbsp; 📑 [기획서](docs/plan/nightgap_plan.pdf) &nbsp;|&nbsp; 📝 [결과 설명자료](docs/result_explanation.md) &nbsp;|&nbsp; 🗃 [데이터 명세](docs/data_spec.md) &nbsp;|&nbsp; 💬 [Prompt·Tool](docs/prompts.md)
 
 </div>
 
@@ -31,13 +27,15 @@
 
 <br>
 
-## 💡 왜 만들었나
+## 🌙 이런 문제를 풀어요
 
-밤에 버스에서 내린 사람은 대부분 걸어서 집에 가요. **밤길은 정류장에서 시작돼요.**
+> 밤 버스에서 내린 사람은 대부분 걸어서 집에 가요. 그래서 **밤길의 첫걸음은 정류장**이에요.
 
-| 🚏 CCTV·비상벨 모두 없는 정류장 | 🌙 밤 10시~자정 버스 승차 | 🎒 밤 10시 이후 승차 중 청소년 |
-|:---:|:---:|:---:|
-| **2,848곳**<br><sub>이용 기록이 있는 3,732곳의 76%</sub> | **하루 516명**<br><sub>제주 전체, 최근 90일 평균</sub> | **11.6 %**<br><sub>하루 전체(7.9%)보다 높아요</sub> |
+| 숫자 | 무엇을 뜻하나 |
+|---:|---|
+| **2,848곳** | CCTV(100m)도 비상벨(200m)도 닿지 않는 정류장 · 이용 기록이 있는 3,732곳의 76% |
+| **하루 516명** | 밤 10시~자정에 제주에서 버스를 타는 사람 (최근 90일 평균) |
+| **11.6%** | 밤 10시 이후 승차 중 청소년 비율 · 하루 전체(7.9%)보다 높아요 |
 
 <sub>출처: 제주데이터허브 정류장별 이용·시간대별 승차, 공공데이터포털 CCTV·안전비상벨·정류소 위치 (2026년 11월 계산)</sub>
 
@@ -47,63 +45,63 @@
 
 <br>
 
-## ✨ 무엇을 하나
+## 🧭 할 수 있는 일
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="center">
 
-**💬 말로 묻기**<br>
+<img src="docs/img/readme/ask.jpg" alt="Agent 작업 공간. 왼쪽 대화와 오른쪽 3D 지도"><br>
+<b>① 평소 말로 묻기</b><br>
 <sub>"우리 애가 밤 10시에 노형에서 내리는데 괜찮아?", "예산 1억이면?"처럼 물으면 왼쪽에 답이, 오른쪽 3D 지도에 위치가 바로 나와요.</sub>
-<img src="docs/img/readme/ask.jpg" alt="Agent 작업 공간. 왼쪽 대화와 오른쪽 3D 지도">
 
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="center">
 
-**📍 먼저 손볼 곳과 고치는 방법**<br>
+<img src="docs/img/readme/list.jpg" alt="우선 개선 1순위 정류장 카드"><br>
+<b>② 먼저 손볼 곳과 고치는 방법</b><br>
 <sub>1순위 정류장마다 CCTV를 새로 달지, 근처 CCTV 방향만 돌릴지 정해 주고, 걸어서 몇 분인지와 주변 지도를 보여줘요.</sub>
-<img src="docs/img/readme/list.jpg" alt="우선 개선 1순위 정류장 카드">
 
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="center">
 
-**🎮 설치 계획 시뮬레이션**<br>
-<sub>예산을 정하고 정류장마다 할 일을 고르면 몇 명에게 새로 닿는지와 등급이 바로 바뀌고, Agent 추천과 비교돼요.</sub>
-<img src="docs/img/readme/plan.jpg" alt="예산 1억원 설치 계획 화면">
+<img src="docs/img/readme/plan.jpg" alt="예산 1억원 설치 계획 화면"><br>
+<b>③ 예산으로 해 보는 설치 계획</b><br>
+<sub>정류장마다 할 일을 고르면 몇 명에게 새로 닿는지와 등급이 바로 바뀌고, Agent 추천과 견줘 볼 수 있어요.</sub>
 
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="center">
 
-**📄 바로 내는 건의서**<br>
+<img src="docs/img/readme/doc.jpg" alt="건의서 화면"><br>
+<b>④ 그대로 내는 건의서</b><br>
 <sub>요지·현황·우선 개선 표·정류장별 지도·설치 계획안·기대 효과를 그림과 함께 담아 인쇄하거나 PDF로 저장해요.</sub>
-<img src="docs/img/readme/doc.jpg" alt="건의서 화면">
 
 </td>
 </tr>
 </table>
 
-- **🌐 설치 없이 웹에서**: [웹 데모](https://hosting1108.github.io/night-gap-agent/)에서는 센터 PC 버전과 **같은 Agent 코드**가 브라우저 안에서 돌아가요. 올린 파일은 그 브라우저 밖으로 나가지 않아요.
-- **📥 CSV 끌어다 놓기**: 파일 이름이 달라도 Agent가 컬럼을 보고 어떤 자료인지 알아내고, 무엇이 달라지는지 말한 뒤 바로 다시 분석해요.
-- **🔌 키가 없어도 끝까지**: API 키가 없거나 인터넷이 막혀도 **규칙 모드**로 같은 기능을 1~3초 안에 써요.
-- **🗺️ 밤의 제주 3D 지도**: 외부 지도 서비스 없이 직접 그린 지도 위에 NASA 위성 밤 불빛과 정류장 공백을 함께 보여줘요.
+- **설치 없이 웹에서** — [웹 데모](https://hosting1108.github.io/night-gap-agent/)에서는 센터 PC 버전과 **같은 Agent 코드**가 브라우저 안에서 돌아가요. 올린 파일은 그 브라우저 밖으로 나가지 않아요.
+- **CSV 끌어다 놓기** — 파일 이름이 달라도 Agent가 컬럼을 보고 어떤 자료인지 알아내고, 무엇이 달라지는지 말한 뒤 바로 다시 분석해요.
+- **API 키 없이도 끝까지** — API 키가 없거나 인터넷이 막혀도 **규칙 모드**로 같은 기능을 1~3초 안에 써요.
+- **밤의 제주 3D 지도** — 외부 지도 서비스 없이 직접 그린 지도 위에 NASA 위성 밤 불빛과 정류장 공백을 함께 보여줘요.
 
 <br>
 
-## 🔎 실데이터로 찾은 것
+## 📊 제주 자료로 확인한 결과
 
-> 2026년 11월, 공개 실데이터(정류장 4,080곳, CCTV 1,134곳, 비상벨 805개, 학교 200곳, 정류장별 이용 25일치)로 제주 전체를 분석한 결과예요.
+2026년 11월, 공개 실데이터(정류장 4,080곳, CCTV 1,134곳, 비상벨 805개, 학교 200곳, 정류장별 이용 25일치)로 제주 전체를 분석한 결과예요.
 
-| **42.8 %** | **31 배** | **672 곳** |
-|:---|:---|:---|
-| 제주 버스 하루 이용 중<br><sub>CCTV·비상벨이 모두 닿지 않는 정류장에서 타는 몫</sub> | Agent가 고른 곳에 CCTV 10대를 달면<br><sub>외진 곳부터 달 때보다 새로 닿는 이용자 수</sub> | 학교 500m 안인데<br><sub>CCTV도 비상벨도 없는 정류장</sub> |
+- **42.8%** — 제주 버스 하루 이용 중, CCTV·비상벨이 모두 닿지 않는 정류장에서 타는 몫
+- **31배** — Agent가 고른 곳에 CCTV 10대를 달 때, 외진 곳부터 달 때보다 새로 닿는 이용자
+- **672곳** — 학교에서 500m 안인데 CCTV도 비상벨도 없는 정류장
 
-#### 정류장 수와 하루 이용으로 본 공백
+**정류장 수와 하루 이용으로 본 공백**
 
 <img src="docs/img/readme/gap_mix.svg" alt="공백 구성: 정류장 수와 하루 이용 인원" width="100%">
 
-#### 예산에 따라 새로 닿는 사람 수
+**예산에 따라 새로 닿는 사람 수**
 
 <img src="docs/img/readme/budget.svg" alt="예산별 효과: Agent 추천과 이용 많은 순 비교" width="100%">
 
@@ -111,9 +109,9 @@
 
 <br>
 
-## 🧠 Agent 구조
+## 🤖 Agent는 이렇게 움직여요
 
-### 판단은 Agent가, 숫자는 계산식이
+### 계산은 정해진 식으로, 순서와 판단은 Agent가
 
 ![안심하차 Agent 파이프라인](docs/img/pipeline.svg)
 
@@ -196,25 +194,23 @@ flowchart TD
 
 <br>
 
-## ✅ 믿을 수 있게
+## 🔍 결과를 믿을 수 있는 이유
 
-<table>
-<tr>
-<td align="center" width="25%"><h3>40 / 40</h3><sub>평소 말투 질문 시험<br>동네·시간·대상·대수·유형</sub></td>
-<td align="center" width="25%"><h3>10 / 10</h3><sub>기간을 13일 → 25일로 늘려도<br>같은 상위 10곳</sub></td>
-<td align="center" width="25%"><h3>22</h3><sub>자동 테스트 통과<br>빈 폴더에 풀어 다시 실행</sub></td>
-<td align="center" width="25%"><h3>1 cm 미만</h3><sub>좌표 변환 왕복 오차<br>3개 좌표계</sub></td>
-</tr>
-</table>
+| 확인한 것 | 결과 |
+|---|---|
+| 평소 말투 질문 시험 (동네·시간·대상·대수·유형) | **40 / 40** 정답 |
+| 이용 기간을 13일 → 25일로 늘렸을 때 상위 10곳 | **10 / 10** 그대로 |
+| 자동 테스트 (빈 폴더에 풀어 다시 실행) | **22개** 통과 |
+| 좌표 변환 왕복 오차 (3개 좌표계) | **1cm 미만** |
 
-- **🔢 숫자를 지어내지 않음**: 모든 숫자는 정해진 계산식으로 구하고, Claude는 계산 결과에 있는 숫자만 써요.
-- **🛡 원래 자료는 밖으로 나가지 않음**: Claude에는 집계한 숫자만 보내고, 하루 10명 미만인 값은 "10명 미만"으로 가려요.
-- **🚫 위험 지도가 아님**: 범죄 자료는 쓰지 않아요. 시설이 부족한 곳, 먼저 보강하면 좋은 곳을 알려줘요.
+- **숫자를 지어내지 않아요** — 모든 숫자는 정해진 계산식으로 구하고, Claude는 계산 결과에 있는 숫자만 써요.
+- **원래 자료는 밖으로 나가지 않아요** — Claude에는 집계한 숫자만 보내고, 하루 10명 미만인 값은 "10명 미만"으로 가려요.
+- **위험 지도가 아니에요** — 범죄 자료는 쓰지 않아요. 시설이 부족한 곳, 먼저 보강하면 좋은 곳을 알려줘요.
 - 결과를 읽는 법과 한계는 [결과 설명자료 6절 「결과 근거와 한계」](docs/result_explanation.md)에 정리했어요.
 
 <br>
 
-## 🗂 데이터
+## 📚 쓴 자료
 
 | 자료 | 출처 | 쓰는 곳 |
 |---|---|---|
@@ -231,7 +227,7 @@ flowchart TD
 
 <br>
 
-## 🚀 실행하기
+## 🛠 설치와 실행
 
 ### 설치 (센터 PC, Windows 11)
 
@@ -262,7 +258,7 @@ flowchart TD
 
 <br>
 
-## 📘 사용 매뉴얼
+## 🧾 사용 매뉴얼
 
 1. **자료** (화면 오른쪽 위)
    - 처음 열면 **실제 자료**로 시작해요. 공개 정류장·CCTV·비상벨·학교·시간대별 승차 자료(`data/public`)와 정류장별 이용 자료(`data/input`)가 이미 들어 있어요.
@@ -301,7 +297,7 @@ flowchart TD
 
 <br>
 
-## ⚠️ 오류와 제약사항
+## 🚧 오류와 제약사항
 
 ### 오류가 날 때
 
@@ -325,7 +321,7 @@ flowchart TD
 
 <br>
 
-## 🧩 더 넣을 수 있는 자료
+## ➕ 더 넣을 수 있는 자료
 
 - 가로등 위치 자료(전국보안등정보표준데이터)를 `data/public`에 넣으면 가로등까지 같이 봐요.
 - 새 CCTV·비상벨 목록을 넣으면 같은 위치는 알아서 합쳐 바로 반영해요.
@@ -372,21 +368,18 @@ tests/               자동 테스트와 질문 이해 시험 (intent_cases.json
 
 <br>
 
-## 🙏 출처와 AI 활용
+## 📌 출처와 AI 활용
 
 - **데이터**: 제주빅데이터센터, 제주데이터허브, 공공데이터포털(CCTV·안전비상벨·버스정류소·초중등학교 위치)
 - **지도와 그림**: 밤 불빛 NASA Black Marble 2016 (GIBS, CC0) · 섬 윤곽 Natural Earth (퍼블릭 도메인) · 3D 지도는 외부 라이브러리 없이 직접 그렸어요
 - **오픈소스**: `anthropic` Python SDK (MIT) · 웹 데모 Pyodide (MPL-2.0)
-- **AI 활용**: Agent 실행에 Claude API(`claude-opus-5-5`)를 써요. 개발에는 Claude Code를 코드 작성·문서 초안·데이터 점검 보조에 썼고, 주제 선정·설계 판단·결과 검증은 참가자가 했어요. 자세한 내용은 [데이터 활용 명세 5절](docs/data_spec.md)에 있어요.
+- **AI 활용**: 질문에 답하는 Agent는 Claude API(`claude-opus-5-5`)로 돌아가요. 만드는 동안에는 Claude Code가 코드·문서 초안과 자료 점검을 도왔고, 주제·설계·결과 확인은 참가자가 직접 정했어요. → [데이터 활용 명세 5절](docs/data_spec.md)
 - **결과물 소유권**: 대회 규칙에 따라 결과물은 제주빅데이터센터에 소속돼요.
 
 <br>
 
-<div align="center">
-<sub>
-특정 동네를 위험하다고 말하는 도구가 아니라, 밤길 첫걸음에 필요한 시설이 어디에 부족한지 보는 도구예요.<br>
-결과는 현장 확인을 거쳐 쓰는 1차 후보이며, 최종 판단은 담당 기관의 몫이에요.
-</sub>
-<br><br>
-<b>🌙 안심하차 Agent</b> · 내릴 때부터 안심하자 · 2026
-</div>
+---
+
+> 🌙 **안심하차 Agent**는 특정 동네를 위험하다고 말하지 않아요. 밤길 첫걸음에 필요한 시설이 어디에 부족한지 보여주고, 결과는 현장 확인을 거쳐 쓰는 1차 후보예요. 최종 판단은 담당 기관이 해요.
+>
+> <sub>내릴 때부터 안심하자 · 제주 AI·빅데이터 활용 AI Agent 개발 챌린지 2026</sub>
